@@ -17,23 +17,30 @@ public class FilaComVetor {
 
     // Método para adicionar um elemento à fila (enqueue)
     public void enqueue(int item) {
+        // Verifica se a fila está cheia e precisa de redimensionamento
         if (tamanho == capacidade) {
-            throw new IllegalStateException("Queue overflow");
+            redimensionar(capacidade * 2); // Dobra a capacidade do array
         }
-        traseira = (traseira + 1) % capacidade;
         itens[traseira] = item;
+        traseira = (traseira + 1) % capacidade; // Atualiza a posição do fim
         tamanho++;
     }
 
-    // Método para remover e retornar o elemento da frente da fila (dequeue)
+    // Método para remover e retornar o elemento da fila (dequeue)
     public int dequeue() {
         if (tamanho == 0) {
             throw new IllegalStateException("Queue underflow");
         }
-        int item = itens[frente];
-        frente = (frente + 1) % capacidade;
+        int itemRemovido = itens[frente];
+        frente = (frente + 1) % capacidade; // Atualiza a posição do início
         tamanho--;
-        return item;
+
+        // Reduz a capacidade do array se o número de elementos for menor que um quarto da capacidade
+        if (tamanho > 0 && tamanho == capacidade / 4) {
+            redimensionar(capacidade / 2);
+        }
+
+        return itemRemovido;
     }
 
     // Método para retornar o elemento da frente da fila sem removê-lo (peek)
@@ -52,6 +59,18 @@ public class FilaComVetor {
     // Método para retornar o tamanho da fila
     public int size() {
         return tamanho;
+    }
+
+    // Método para redimensionar o array
+    private void redimensionar(int novaCapacidade) {
+        int[] novosItens = new int[novaCapacidade];
+        for (int i = 0; i < tamanho; i++) {
+            novosItens[i] = itens[(frente + i) % capacidade];
+        }
+        itens = novosItens;
+        capacidade = novaCapacidade;
+        frente = 0;
+        traseira = tamanho;
     }
 
     // Método principal para testar a fila com vetor
@@ -74,5 +93,62 @@ public class FilaComVetor {
 
         System.out.println("A fila está vazia após remover todos os elementos? " + fila.isEmpty()); // Deve imprimir true
     }
-}
 
+    /*
+    Descreva a saída resultante da seguinte série de operações sobre uma fila: enfileire(5), enfileire(3),
+    desenfileire(), enfileire(2), enfileire(8), desenfileire(), desenfileire(),enfileire(9),
+    enfileire(1), desenfileire(), enfileire(7), enfileire(6). desenfileire(), desenfileire().
+
+enfileire(5): Adiciona o elemento 5 à fila.
+
+Fila: [5]
+enfileire(3): Adiciona o elemento 3 à fila.
+
+Fila: [5, 3]
+desenfileire(): Remove o elemento do início da fila (5).
+
+Fila: [3]
+Saída: 5
+enfileire(2): Adiciona o elemento 2 à fila.
+
+Fila: [3, 2]
+enfileire(8): Adiciona o elemento 8 à fila.
+
+Fila: [3, 2, 8]
+desenfileire(): Remove o elemento do início da fila (3).
+
+Fila: [2, 8]
+Saída: 3
+desenfileire(): Remove o elemento do início da fila (2).
+
+Fila: [8]
+Saída: 2
+enfileire(9): Adiciona o elemento 9 à fila.
+
+Fila: [8, 9]
+enfileire(1): Adiciona o elemento 1 à fila.
+
+Fila: [8, 9, 1]
+desenfileire(): Remove o elemento do início da fila (8).
+
+Fila: [9, 1]
+Saída: 8
+enfileire(7): Adiciona o elemento 7 à fila.
+
+Fila: [9, 1, 7]
+enfileire(6): Adiciona o elemento 6 à fila.
+
+Fila: [9, 1, 7, 6]
+desenfileire(): Remove o elemento do início da fila (9).
+
+Fila: [1, 7, 6]
+Saída: 9
+desenfileire(): Remove o elemento do início da fila (1).
+
+Fila: [7, 6]
+Saída: 1
+
+    ordem: 5, 3, 2, 8, 9, 1
+
+    */
+}
