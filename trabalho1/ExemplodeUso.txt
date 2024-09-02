@@ -2,4 +2,4 @@ uso:
 javac StdOut.java 
 javac StdIn.java
 javac DequeSearch.java
-java DequeSearch < tinyST;txt
+java DequeSearch < tinyST.txt
